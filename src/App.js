@@ -1,59 +1,46 @@
 import './App.css';
 
+
+// import  { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggle } from './Store/slices/cartToggleSlice.js';
 import CardSet from './components/Cardset'
 import Navbar from './components/Navbar'
+// import Products from '../../data/data.js';
 
+// import { setActiveOption } from './Store/slices/navbarSlice';
+
+import CardData from './data/data.js'
+import CartWidget from './components/CartWidgetCard';
 function App() {
+  const isToggled = useSelector((state) => state.toggle.isToggled);
+  const dispatch = useDispatch();
 
-  const cardData = [
-    {
-      imgSrc: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-      title: 'Card 1',
-      description: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
-      lastUpdated: 'Last updated 3 mins ago'
-    },
-    {
-      imgSrc: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-      title: 'Card 2',
-      description: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
-      lastUpdated: 'Last updated 3 mins ago'
-    },
-    {
-      imgSrc: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-      title: 'Card 1',
-      description: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
-      lastUpdated: 'Last updated 3 mins ago'
-    },
-    {
-      imgSrc: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-      title: 'Card 2',
-      description: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
-      lastUpdated: 'Last updated 3 mins ago'
-    },
-    {
-      imgSrc: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-      title: 'Card 1',
-      description: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
-      lastUpdated: 'Last updated 3 mins ago'
-    },
-    {
-      imgSrc: 'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg',
-      title: 'Card 2',
-      description: 'This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.',
-      lastUpdated: 'Last updated 3 mins ago'
-    },
 
-    // Add more card data as needed
-  ];
+
+  // const [isToggled, setIsToggled] = useState(false);
+
+  const toggleBackgroundColor = () => {
+    dispatch(toggle());
+  };
+
+
   return (
-    <div className="App">
-      <div className='app-container' style={{ maxHeight: '100%' }} >
+    <div className={`App`} >
+      <Navbar onToggle={toggleBackgroundColor} />
+      <CartWidget isToggled={isToggled} />
 
 
-      <Navbar />
 
-      <CardSet cardData={cardData} />
+      <div className='app-container' >
+        <div className='h3 d-flex justify-content-start mt-4' style={{ fontFamily: 'Raleway' }}>
+          {useSelector((state) => state.navbar.activeOption)}
+        </div>
+
+        <div className= { `Cart ${isToggled ? 'toggled' : ''} `}></div>
+        <CardSet cardData={CardData}  />
       </div>
+      
     </div >
   );
 }
