@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setActiveOption } from '../Store/slices/navbarSlice';
 import Products from '../data/data.js';
 
-function Navbar({ onToggle }) {
+function Navbar({ onToggle, options }) {
     const activeOption = useSelector((state) => state.navbar.activeOption);
     const cartItems = Products.length;
     const dispatch = useDispatch();
@@ -15,7 +15,7 @@ function Navbar({ onToggle }) {
             dispatch(setActiveOption(option));
         }
         else if (activeOption === "Cart" && option === "Cart") {
-            dispatch(setActiveOption('Women'));
+            dispatch(setActiveOption(option));
         }
         else {
             dispatch(setActiveOption(option));
@@ -30,33 +30,18 @@ function Navbar({ onToggle }) {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
-                        <li className={`nav-item ${activeOption === 'Women' ? 'selected' : ''}`}>
+                    {options && options.map(option => (
+                        <li className={`nav-item ${activeOption === option ? 'selected' : ''}`}>
                             <a
-                                className={`nav-link ${activeOption === 'Women' ? 'active' : ''}`}
-                                onClick={() => handleOptionClick('Women')}
-                                href="#Women"
+                                className={`nav-link ${activeOption === option ? 'active' : ''}`}
+                                onClick={() => handleOptionClick(option)}
+                                href={`#${option}`}
+                                
                             >
-                                Women
+                                {option}
                             </a>
                         </li>
-                        <li className={`nav-item ${activeOption === 'Men' ? 'selected' : ''}`}>
-                            <a
-                                className={`nav-link ${activeOption === 'Men' ? 'active' : ''}`}
-                                onClick={() => handleOptionClick('Men')}
-                                href="#Men"
-                            >
-                                Men
-                            </a>
-                        </li>
-                        <li className={`nav-item ${activeOption === 'Kids' ? 'selected' : ''}`}>
-                            <a
-                                className={`nav-link ${activeOption === 'Kids' ? 'active' : ''}`}
-                                onClick={() => handleOptionClick('Kids')}
-                                href="#Kids"
-                            >
-                                Kids
-                            </a>
-                        </li>
+                    ))}
                     </ul>
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item position-relative" onClick={onToggle}>
