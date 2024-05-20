@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { useParams } from 'react-router-dom';
-import { Navigate } from 'react-router-dom'; // If using React Router
 import { Link } from 'react-router-dom';
+import { Products } from '../data/data.js'
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.css';
+import 'swiper/css/navigation';
+import DOMPurify from 'dompurify';
+import parse from 'html-react-parser';
 
 const withRouter = WrappedComponent => props => {
     const params = useParams();
@@ -14,42 +19,13 @@ const withRouter = WrappedComponent => props => {
     );
 };
 
-
 class ProductDetails extends Component {
-
-
-    handleNavigation = () => {
-        return <Navigate to="/" />;
-    };
-
-
 
 
     render() {
         const id = this.props.params.id;
-        console.log("Product ID: ", this.props.params);
-
-
-        // Example product details data
-        const productDetails = [
-            { name: 'apple-airtag', description: 'Description 1' },
-            { name: 'Product 2', description: 'Description 2' },
-            { name: 'jacket-canada-goosee', description: 'Description 3' },
-            { name: 'apple-airpods-pro', description: 'Description 3' },
-            { name: 'apple-iphone-12-pro', description: 'Description 3' },
-            { name: 'apple-imac-2021', description: 'Description 3' },
-            { name: 'xbox-series-s', description: 'Description 3' },
-            { name: 'PlayStation 5', description: 'Description 3' },
-            { name: 'huarache-x-stussy-le', description: 'Description 3' },
-        ];
-
-        const product = productDetails.find(product => product.name === id);
-
-
-
-
-
-
+        // console.log("Product ID: ", this.props.params);
+        const product = Products.find(product => product.id === id);
         if (!product) {
             return <div>
 
@@ -57,20 +33,77 @@ class ProductDetails extends Component {
                 Product not found
             </div>;
         }
+        const handleSelect = (item) => {
+            console.log(item);
+        }
+        const handleAddToCart = (product) => {
+            console.log(product);
+            // return <Link to="/" style={{ color: 'inherit' }} />
+        }
+        const sanitizedDescription = DOMPurify.sanitize(product.description);
+
+
 
         return (
-            <div>
-                <h1>Product Details : {product.name}</h1>
-                <p>{product.description}</p>
+            <div className="product-details container d-flex flex-wrap">
+                <div className="col-12 col-sm-6 col-md-6 d-flex flex-wrap justify-content-start">
+                    <div className="gallery col-12 col-sm-3 col-md-2 d-flex flex-column justify-content-start">
+                        {product.gallery && product.gallery.map((image, index) => (
+                            <img key={index} src={image} alt={product.name} className="img-fluid mh-10 mb-2" />
+                        ))}
+                    </div>
+                    <div className="col-12 col-sm-9 col-md-10">
+                        <Swiper
+                            spaceBetween={10}
+                            slidesPerView={1}
+                            navigation={product.gallery.length > 1}
+                            pagination={{ clickable: true }}
+                            scrollbar={{ draggable: true }}
+                            className="swiper-container"
+                        >
+                            {product.gallery && product.gallery.map((image, index) => (
+                                <SwiperSlide key={index}>
+                                    <img src={image} className="rounded-start slider-img img-fluid" alt={product.name} style={{ width: '100%' }} />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+                    </div>
+                </div>
+                <div className="details col-12 col-md-5 mt-4 mt-md-0">
+                    <div className="product-info pb-3">
+                        <h1>{product.name}</h1>
 
+                        {product.attributes && product.attributes.map((attribute, index) => (
+                            <div key={index} className="d-flex flex-column align-items-start mb-3">
+                                <h5>{attribute.id} :</h5>
+                                <div className="d-flex flex-wrap align-items-start">
+                                    {attribute.items.map((item, index) => (
+                                        <li
+                                            key={index}
+                                            className="item-border p-2 m-1"
+                                            onClick={() => handleSelect(item)}
+                                            style={attribute.id === "Color" ? { backgroundColor: item.value } : {}}
+                                        >
+                                            <h5>{attribute.id === "Color" ? "" : item.value}</h5>
+                                        </li>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
 
-                <Link to="/" >Go back to home</Link>
+                        <h5 className="mb-3">Price: </h5>
+                        {product.prices && `${product.prices[0].currency.label} ${product.prices[0].amount}`}
+
+                        <Link to="/" className="cart-btn d-grid gap-2 col-12 mx-auto">
+                            <div className="btn btn-success btn-lg" onClick={handleAddToCart}>Add to cart</div>
+                        </Link>
+
+                        {parse(sanitizedDescription)}
+                    </div>
+                </div>
             </div>
         );
     }
 }
 
-
 export default withRouter(ProductDetails);
-
-// export default ProductDetails
