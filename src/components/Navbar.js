@@ -2,7 +2,8 @@ import React from 'react';
 import { GrCart } from "react-icons/gr";
 import { useSelector, useDispatch } from 'react-redux';
 import { setActiveOption } from '../Store/slices/navbarSlice';
-import Products from '../data/data.js';
+
+import {Products} from '../data/data.js';
 
 function Navbar({ onToggle, options }) {
     const activeOption = useSelector((state) => state.navbar.activeOption);
@@ -30,8 +31,8 @@ function Navbar({ onToggle, options }) {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
-                    {options && options.map(option => (
-                        <li className={`nav-item ${activeOption === option ? 'selected' : ''}`}>
+                        {options && options.map((option, index) => (
+                        <li key={index} className={`nav-item ${activeOption === option ? 'selected' : ''}`}>
                             <a
                                 className={`nav-link ${activeOption === option ? 'active' : ''}`}
                                 onClick={() => handleOptionClick(option)}

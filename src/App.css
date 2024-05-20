@@ -1,42 +1,43 @@
 .App {
   text-align: center;
   background-color: rgb(255, 255, 255);
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
+  /* Full viewport height */
 }
 
 .Cart.toggled {
-    position: fixed;
-    top: 7% + 10'px' ;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    z-index: 10; 
-
+  position: fixed;
+  top: 7% + 10 'px';
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 }
-
 
 .cart-widget {
   position: relative;
-
 }
 
 .cart-products {
-
-  position: fixed; /* Make the widget pop up without affecting layout */
-  top: 7% ; /* Adjust as needed */
-  right: 20px; /* Adjust as needed */
-  z-index: 1100; /* Ensure it is on top of other elements */
-  background-color: #fff; /* Add a background color */
-  width: 300px; 
-
+  position: fixed;
+  /* Make the widget pop up without affecting layout */
+  top: 7%;
+  /* Adjust as needed */
+  right: 20px;
+  /* Adjust as needed */
+  z-index: 1100;
+  /* Ensure it is on top of other elements */
+  background-color: #fff;
+  /* Add a background color */
+  width: 300px;
 }
+
 .nav-item .badge {
-    font-size: 0.75rem;
-    padding: 0.5em 0.6em;
-    transform: translate(-50%, -50%);
+  font-size: 0.75rem;
+  padding: 0.5em 0.6em;
+  transform: translate(-50%, -50%);
 }
-
 
 /* .App.toggled img.grayscale-img {
     filter: grayscale(100%);
@@ -53,8 +54,19 @@
   }
 }
 
+
+.text.center {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  font-size: 25px;
+  /* font-weight: 500; */
+}
+
 .product-card {
-  width: 100%;
+  width: 80%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -62,92 +74,110 @@
 
 .image-wrapper {
   width: 100%;
-  height: 200px; /* Adjust height as needed */
+  height: 200px;
+  /* Adjust height as needed */
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.out-of-stock {
+  opacity: 0.35;
+}
+.card-text {
+  width: 100%;
+}
+.card-icon{
+  color: green;
+  font-size: 20px;
+  margin-left: auto;
+}
+
 .shadow-select {
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
-    box-shadow: 0 0 0 0;
-
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+  box-shadow: 0 0 0 0;
 }
+
 .shadow-select.selected {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-.navbar{
-
-  margin-top: 10px
-}
+/* .navbar {
+  margin-top: 10px;
+} */
 
 .image-wrapper img {
   width: 100%;
   height: 100%;
-  object-fit: contain ; /* Ensures the image covers the entire wrapper without distortion */
-  justify-content:flex-start;
-  /* background-color: rgb(248, 246, 246); */
+  /* Ensures the image covers the entire wrapper without distortion */
+  justify-content: flex-start;
+  object-fit: fill;
 }
+
 .navbar .nav-item.selected .nav-link {
-    color: rgb(103, 216, 103); /* Change this to your desired color */
-    /* font-family: sans-serif; */
-    
+  color: rgb(103, 216, 103);
+  /* Change this to your desired color */
+  /* font-family: sans-serif; */
 }
+
 a {
-color: inherit; /* blue colors for links too */
-text-decoration: inherit; /* no underline */
+  color: inherit;
+  /* blue colors for links too */
+  text-decoration: inherit;
+  /* no underline */
 }
+
 img {
-    position: relative;
-    pointer-events: none;
-    z-index: 1; /* Ensure images are behind overlay */
+  position: relative;
+  pointer-events: none;
+  z-index: 1;
+  /* Ensure images are behind overlay */
 }
 
 .navbar .nav-item .nav-link {
-    font-family: 'Raleway';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 100%;
-    padding: 1rem;
-}
-.card-set{
-  overflow-x: auto; 
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 100%;
+  padding: 1rem;
+  caret-color: transparent;
 
+}
+
+.card-set {
+  overflow-x: auto;
 }
 
 .card {
   caret-color: transparent;
   background-color: inherit;
+  justify-content: center;
+  align-items: center;
   border: none;
-  max-width: 50vh ;
-
+  max-width: 50vh;
 }
+
 .card-body {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  
 }
 
-.nav-item.selected{
-    border-bottom: 3px solid rgb(103, 216, 103);
-    color:  #e5e6e6;
+.nav-item.selected {
+  border-bottom: 3px solid rgb(103, 216, 103);
+  color: #e5e6e6;
 }
-
 
 .app-container {
   display: flex;
   flex-direction: column;
   margin-left: 5%;
   margin-right: 5%;
-  font-family: 'Raleway'
-
+  font-family: 'Raleway';
 }
-
 
 .App-link {
   color: #61dafb;
@@ -157,6 +187,7 @@ img {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

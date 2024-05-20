@@ -1,11 +1,10 @@
-// slices/navbarSlice.js
-
+// src/Store/slices/navbarSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 export const navbarSlice = createSlice({
     name: 'navbar',
     initialState: {
-        activeOption: 'Clothes',
+        activeOption: 'All',
     },
     reducers: {
         setActiveOption: (state, action) => {

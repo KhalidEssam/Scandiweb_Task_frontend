@@ -30,7 +30,6 @@ class FetchQuery extends Component {
             .then(response => response.json())
             .then(data => {
 
-                // console.log('Products:', data.data.products.map(product => product.name)); // Log the products array
 
                 // Dispatch categories data to Redux store
                 this.props.categoriesLoading();
@@ -38,7 +37,7 @@ class FetchQuery extends Component {
 
                 // Dispatch products data to Redux store
                 this.props.productsLoading();
-                this.props.productsSuccess(data.data.categories.map(category => category.name));
+                this.props.productsSuccess(data.data.products.map(product => product.name));
 
                 this.setState({ loading: false, data });
             })
