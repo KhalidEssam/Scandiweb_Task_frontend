@@ -3,11 +3,9 @@ import { GrCart } from "react-icons/gr";
 import { useSelector, useDispatch } from 'react-redux';
 import { setActiveOption } from '../Store/slices/navbarSlice';
 
-import {Products} from '../data/data.js';
-
 function Navbar({ onToggle, options }) {
     const activeOption = useSelector((state) => state.navbar.activeOption);
-    const cartItems = Products.length;
+    const cartItems =  useSelector(state => state.cartItems.cartItems).length;
     const dispatch = useDispatch();
 
     const handleOptionClick = (option) => {

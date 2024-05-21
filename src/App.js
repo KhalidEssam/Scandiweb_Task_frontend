@@ -1,6 +1,5 @@
 import './App.css';
 
-
 // Hooks
 import { useSelector, useDispatch } from 'react-redux';
 import { toggle } from './Store/slices/cartToggleSlice.js';
@@ -10,11 +9,8 @@ import { Routes, Route } from "react-router-dom";
 // import CardSet from './components/Cardset'
 import Navbar from './components/Navbar'
 
-
-
 // GraphQL DATA
 import FetchQuery from './services/FetchQuery.js';
-
 
 // Cart Overlay
 import CartWidget from './components/CartWidgetCard'
@@ -22,8 +18,6 @@ import CartWidget from './components/CartWidgetCard'
 //data.js 
 
 import { Query } from './data/data.js'
-// import { Products } from './data/data.js'
-
 
 //Pages
 import ProductListing from './pages/ProductListing'
@@ -34,10 +28,6 @@ function App() {
   const isToggled = useSelector((state) => state.toggle.isToggled);
   const dispatch = useDispatch();
   const categories = useSelector(state => state.categories.categories);
-
-
-
-  // const [isToggled, setIsToggled] = useState(false);
 
   const toggleBackgroundColor = () => {
     dispatch(toggle());
@@ -51,17 +41,11 @@ function App() {
       <CartWidget isToggled={isToggled} />
 
       <div className='app-container' >
-
-
-
         <div className='h3 d-flex justify-content-start mt-4' >
           {useSelector((state) => state.navbar.activeOption)}
         </div>
 
         <div className={` justify-content-center Cart ${isToggled ? 'toggled' : ''} `}></div>
-        {/* <CardSet cardData={Products} /> */}
-
-        {/* <ProductListing /> */}
 
 
         <Routes>

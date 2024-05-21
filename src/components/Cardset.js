@@ -56,7 +56,7 @@ class CardSet extends Component {
         return (
             <div className="card-set d-flex flex-wrap justify-content-center align-items-center mt-2">
                 {cardData.map((card, index) => (
-                    <div key={index} className="card col-12 col-sm-6 col-md-4 col-lg-3 m-3" onClick={() => this.handleCardClick(index)}>
+                    <div key={index} className="card col-12 col-sm-6 col-md-4 col-lg-4 m-3" onClick={() => this.handleCardClick(index)}>
                         <div className="product-card">
                             <div className={`${card.inStock ? '' : 'out-of-stock'}`}>
                                 <div className={`shadow-select ${card.isSelected ? 'selected' : ''}`}>
@@ -65,14 +65,12 @@ class CardSet extends Component {
                                         <img src={card.gallery[0]} className="rounded-start img-fluid" alt="Card"></img>
                                     </div>
                                     <div className="card-body">
-                                        <div className="card-body d-block">
-                                            <h5 className="card-title d-flex">{card.name}</h5>
-                                            <div className='d-flex w-100'>
-                                                <p className="card-text d-flex">
-                                                    <small className="text-muted">{card.prices[0].currency.label + " " + card.prices[0].amount}</small>
-                                                    {card.isSelected && card.inStock && <TbShoppingCartPlus className='card-icon' onClick={() => this.handleDetailsPageRedirect(card)} />}
-                                                </p>
-                                            </div>
+                                        <h5 className="card-title d-flex">{card.name}</h5>
+                                        <div className='d-flex w-100'>
+                                            <p className="card-text d-flex">
+                                                <small className="text-muted">{card.prices[0].currency.label + " " + card.prices[0].amount}</small>
+                                                {card.isSelected && card.inStock && <TbShoppingCartPlus className='card-icon' onClick={() => this.handleDetailsPageRedirect(card)} />}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
