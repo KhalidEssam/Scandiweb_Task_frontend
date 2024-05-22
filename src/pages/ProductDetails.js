@@ -15,22 +15,57 @@ const withRouter = (WrappedComponent) => (props) => {
 };
 
 class ProductDetails extends Component {
-    handleAddToCart = () => {
-        const { id } = this.props.params;
+
+    constructor(props) {
+        super(props);
+        const { id } = props.params;
         const product = Products.find(product => product.id === id);
-        this.props.addItemToCart(product);
-        // this.props.addItemToCart(product);
+
+        this.state = {
+            product: product || null,
+        };
+    }
+
+    handleAddToCart = () => {
+        const { product } = this.state;
+
+        if (product && this.allAttributesSelected()) {
+            this.props.addItemToCart(product);
+        } else {
+            alert("Please select an option for all attributes.");
+        }
+    }
+
+    allAttributesSelected = () => {
+        const { product } = this.state;
+        return product.attributes.every(attribute =>
+            attribute.items.some(item => item.isSelected)
+        );
+    }
+
+    handleSelectOption = (itemId, attributeId) => {
+        this.setState(prevState => {
+            const updatedProduct = { ...prevState.product };
+            updatedProduct.attributes = updatedProduct.attributes.map(attribute => {
+                if (attribute.id === attributeId) {
+                    return {
+                        ...attribute,
+                        items: attribute.items.map(item => ({
+                            ...item,
+                            isSelected: item.id === itemId ? !item.isSelected : false
+                        }))
+                    };
+                }
+                return attribute;
+            });
+            return { product: updatedProduct };
+        });
     }
 
     render() {
-        const { id } = this.props.params;
-        const product = Products.find(product => product.id === id);
+        const { product } = this.state;
         if (!product) {
-            return <div>{id} Product not found</div>;
-        }
-
-        const handleSelect = (item) => {
-            console.log(item);
+            return <div>Product not found</div>;
         }
 
         const sanitizedDescription = DOMPurify.sanitize(product.description);
@@ -65,16 +100,16 @@ class ProductDetails extends Component {
                         <h1>{product.name}</h1>
                         {product.attributes && product.attributes.map((attribute, index) => (
                             <div key={index} className="d-flex flex-column align-items-start mb-3">
-                                <h5>{attribute.id} :</h5>
+                                <h5>{attribute.name}:</h5>
                                 <div className="d-flex flex-wrap align-items-start">
                                     {attribute.items.map((item, index) => (
                                         <li
                                             key={index}
-                                            className="item-border p-2 m-1"
-                                            onClick={() => handleSelect(item)}
+                                            className={`item-border p-2 m-1 option-select ${item.isSelected ? 'selected' : ''}`}
+                                            onClick={() => this.handleSelectOption(item.id, attribute.id)}
                                             style={attribute.id === "Color" ? { backgroundColor: item.value } : {}}
                                         >
-                                            <h5>{attribute.id === "Color" ? "" : item.value}</h5>
+                                            <h6>{attribute.id === "Color" ? "" : item.value}</h6>
                                         </li>
                                     ))}
                                 </div>
@@ -82,9 +117,19 @@ class ProductDetails extends Component {
                         ))}
                         <h5 className="mb-3">Price: </h5>
                         {product.prices && `${product.prices[0].currency.label} ${product.prices[0].amount}`}
-                        <Link to="/" className="cart-btn d-grid gap-2 col-12 mx-auto">
-                            <div className="btn btn-success btn-lg" onClick={this.handleAddToCart}>Add to cart</div>
-                        </Link>
+                        {this.allAttributesSelected() ? (
+                            <Link to="/" className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
+                                <div className="btn btn-success btn-lg">
+                                    Add to cart
+                                </div>
+                            </Link>
+                        ) : (
+                            <div className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
+                                <div className="btn btn-success btn-lg">
+                                    Add to cart
+                                </div>
+                            </div>
+                        )}
                         {parse(sanitizedDescription)}
                     </div>
                 </div>

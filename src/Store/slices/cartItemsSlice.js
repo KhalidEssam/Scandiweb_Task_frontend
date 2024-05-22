@@ -16,11 +16,15 @@ const cartSlice = createSlice({
             const itemIdToRemove = action.payload;
             state.cartItems = state.cartItems.filter(item => item.id !== itemIdToRemove);
         },
-        updateCartItemQuantity(state, action) {
-            const { itemId, newQuantity } = action.payload;
-            const itemToUpdate = state.cartItems.find(item => item.id === itemId);
-            if (itemToUpdate) {
-                itemToUpdate.quantity = newQuantity;
+        updateCartItemQuantity: (state, action) => {
+            const { productId, attributes, count } = action.payload;
+            console.log(count)
+
+            const item = state.cartItems.find(item =>
+                item.id === productId && JSON.stringify(item.attributes) === JSON.stringify(attributes)
+            );
+            if (item) {
+                item.count = count;
             }
         },
         clearCart(state) {

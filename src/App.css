@@ -2,7 +2,7 @@
   text-align: center;
   background-color: rgb(255, 255, 255);
   height: 100vh;
-  /* Full viewport height */
+  overflow: auto;
 }
 
 .Cart.toggled {
@@ -10,22 +10,22 @@
   top: 7% + 10 'px';
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 200%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  z-index: 10;
 }
 
-.cart-widget {
-  position: relative;
-}
 
-.cart-products {
+.cart-products  {
+  caret-color: transparent;
   position: fixed;
   top: 7%;
   right: 20px;
   z-index: 1100;
+  height: 500px;
+  overflow: auto;
   background-color: #fff;
-  width: 300px;
+  width: 360px;
 }
 
 .nav-item .badge {
@@ -65,7 +65,6 @@
 .image-wrapper {
   width: 100%;
   height: 200px;
-  /* Adjust height as needed */
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -93,8 +92,17 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
-.slider-img{
 
+.option-select {
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
+  box-shadow: 0 0 0 0;
+}
+
+.option-select.selected {
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.8);
+}
+
+.slider-img{
   height: 500px;
   width: auto;
   object-fit: fill;
@@ -107,7 +115,9 @@
   flex-direction: column;
   max-height: 500px;
   object-fit: contain;
-    caret-color: transparent;
+  caret-color: transparent;
+  overflow:auto;
+  scrollbar-width: none;
 
 }
 .gallery img{
@@ -116,7 +126,6 @@
   max-height: 20%;
   width: auto;
   object-fit: contain;
-  overflow: hidden;
 }
 .product-info{
   display: flex;
@@ -124,19 +133,14 @@
   justify-content:baseline;
   align-items: flex-start;
   height: 100%;
-
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-
-
 .details{
-  
   margin-left: auto;
 }
 
 .cart-btn {
-  /* margin: 10px; */
   margin: 50px;
 }
 
@@ -200,13 +204,20 @@ img {
 
 .items{
   align-items: start;
-  justify-content: space-between
+  justify-content: space-between;
+  /* font-family: 'Raleway'; */
+  /* font-style: normal; */
+  /* font-weight: 500; */
+  /* font-size: 10px; */
+  /* line-height: 100%; */
+  /* padding: 1rem; */
+  /* caret-color: transparent; */
 }
 
 .item-border {
   list-style: none;
   border: 1px solid #000000;
-  width: auto;
+  max-width: min-content;
   border-radius: 8px;
   margin: 10px;
 

@@ -34,13 +34,13 @@ function App() {
   };
 
   return (
-    <div className='App' >
+    <div className='App'  >
 
       <FetchQuery query={Query} />
       <Navbar onToggle={toggleBackgroundColor} options={categories} />
       <CartWidget isToggled={isToggled} />
 
-      <div className='app-container' >
+      <div className='app-container' onClick={() => { isToggled && toggleBackgroundColor() }} >
         <div className='h3 d-flex justify-content-start mt-4' >
           {useSelector((state) => state.navbar.activeOption)}
         </div>

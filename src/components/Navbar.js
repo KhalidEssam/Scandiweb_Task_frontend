@@ -5,7 +5,7 @@ import { setActiveOption } from '../Store/slices/navbarSlice';
 
 function Navbar({ onToggle, options }) {
     const activeOption = useSelector((state) => state.navbar.activeOption);
-    const cartItems =  useSelector(state => state.cartItems.cartItems).length;
+    const cartItems = useSelector(state => state.cartItems.cartItems).map(item => item.count || 1).reduce((a, b) => a + b, 0) ;
     const dispatch = useDispatch();
 
     const handleOptionClick = (option) => {
@@ -44,7 +44,7 @@ function Navbar({ onToggle, options }) {
                     </ul>
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item position-relative" onClick={onToggle}>
-                            <GrCart size={24} />
+                            <GrCart size={28} />
                             {cartItems > 0 && (
                                 <span className="badge bg-dark position-absolute top-0 start-100 translate-middle rounded-pill">
                                     {cartItems}
