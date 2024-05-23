@@ -20,7 +20,7 @@ class FetchQuery extends Component {
     fetchData() {
         const { query } = this.props;
 
-        fetch('http://localhost:8000/', {
+        fetch('http://localhost/fullstack_assignment/gql_test/src/graphql.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -37,6 +37,8 @@ class FetchQuery extends Component {
 
                 // Dispatch products data to Redux store
                 this.props.productsLoading();
+                
+
                 this.props.productsSuccess(data.data.products.map(product => product.name));
 
                 this.setState({ loading: false, data });

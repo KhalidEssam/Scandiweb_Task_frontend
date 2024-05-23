@@ -573,40 +573,43 @@ export const Products = [
 // GraphQL query string
 export const Query = `
 {
-    categories {
-        id
-        name
+  categories {
+    id
+    name
+  }
+  products {
+    id
+    name
+    inStock
+    description
+    gallery
+    __typename
+    category
+    __typename
+    brand
+    __typename
+    prices {
+      amount
+      currency {
+        label
+        symbol
+      }
+      __typename
     }
-    products {
+    attributes {
         id
-        name
-        inStock
-        description
-        gallery
-        __typename
-        category
-        __typename
-        brand
-        __typename
-        prices {
-            amount
-            currency {
-                label
-                symbol
-            }
-            __typename
-        }
-        attributes {
+        items {
             id
-            items {
-                id
-                displayValue
-            }
-            __typename
+            value
+            displayValue
+
         }
         __typename
     }
+    __typename
+  }
 }
+
 `;
 
 

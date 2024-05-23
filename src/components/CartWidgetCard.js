@@ -19,25 +19,6 @@ class CartWidget extends Component {
         }, 0).toFixed(2); // Ensure the total price is displayed correctly
     };
 
-    aggregateCartItems = (cartItems) => {
-        const aggregatedItems = [];
-
-        cartItems.forEach((item) => {
-            const existingItem = aggregatedItems.find((aggItem) =>
-                aggItem.id === item.id &&
-                JSON.stringify(aggItem.attributes) === JSON.stringify(item.attributes)
-            );
-
-            if (existingItem) {
-                existingItem.count += (item.count || 1);
-            } else {
-                aggregatedItems.push({ ...item });
-            }
-        });
-
-        return aggregatedItems;
-    };
-
     handleIncrement = (productId, attributes) => {
         const { cartItems, updateCartItemQuantity } = this.props;
         const item = cartItems.find(item => item.id === productId && JSON.stringify(item.attributes) === attributes);
@@ -50,38 +31,44 @@ class CartWidget extends Component {
         const { cartItems, updateCartItemQuantity, removeItemFromCart } = this.props;
         const item = cartItems.find(item => item.id === productId && JSON.stringify(item.attributes) === attributes);
         if (item) {
-            const newCount = item.count - 1;
-            if (newCount > 0) {
-                updateCartItemQuantity({ productId, attributes: JSON.parse(attributes), count: newCount });
+            if (item.count > 1) {
+                updateCartItemQuantity({ productId, attributes: JSON.parse(attributes), count: item.count - 1 });
             } else {
-                removeItemFromCart(productId);
+                removeItemFromCart({ productId, attributes: JSON.parse(attributes) });
             }
         }
     };
 
-
     render() {
-
         const { cartItems, isToggled } = this.props;
-        const aggregatedItems = this.aggregateCartItems(cartItems);
         const totalPrice = this.calculateTotalPrice();
+        const totalItems = cartItems.map(item => item.count || 1).reduce((a, b) => a + b, 0);
+        const generateKey = (id, attributes) => {
+            return `${id}-${JSON.stringify(attributes)}`;
+        };
 
         return (
             <div className={` container cart-products d-${isToggled ? 'block' : 'none'}`}   >
                 {isToggled && (
                     <>
-                        <h2>Cart</h2>
-                        {aggregatedItems.map(product => (
-                            <div key={product.id} className="d-flex flex-wrap justify-content-between align-items-center" >
+                        <div className='d-flex justify-content-start'>
+                            <h5>
+                                My Bag
+                            </h5>
+                            <h6 className=' ms-3 mt-2'> {totalItems}  {totalItems && totalItems > 1 ? ' items' : ' item'} </h6>
+                        </div>
+                        {cartItems.map(product => (
+                            <div key={generateKey(product.id, product.attributes)} className="d-flex flex-wrap justify-content-between align-items-center" >
                                 <div className="d-flex flex-wrap flex-column align-items-start">
-                                    <strong><h6>{product.name} (x{product.count || 1})</h6> </strong>
-                                    <p>Price: {product.prices[0].amount}</p>
+                                    <strong><h6>{product.name} (x{(product.count) || 1})</h6> </strong>
+                                    <p data-testid='cart-item-amount'>Price: {product.prices[0].amount}</p>
                                     {product.attributes && product.attributes.map((attribute, index) => (
-                                        <div key={index} className="d-flex flex-column align-items-start mb-3">
+                                        <div key={index} data-testid={`cart-item-attribute-${attribute.name}`} className="d-flex flex-column align-items-start mb-3">
                                             <div className="h6">{attribute.name}:</div>
                                             <div className="d-flex flex-wrap">
                                                 {attribute.items.map((item, index) => (
                                                     <li
+                                                        data-testid={`cart-item-attribute-${attribute.name}-${item.value}${item.isSelected ? '-selected' : ''}`}
                                                         key={index}
                                                         className={`item-border p-2 m-1 option-select ${item.isSelected ? 'selected' : ''}`}
                                                         style={attribute.id === "Color" ? { backgroundColor: item.value } : {}}
@@ -95,10 +82,10 @@ class CartWidget extends Component {
                                 </div>
                                 <div className="d-flex justify-content-end align-items-center">
                                     <div className="d-flex flex-column align-items-center ml-2">
-                                        <button onClick={() => this.handleIncrement(product.id, JSON.stringify(product.attributes))} className="btn btn-sm btn-outline-primary mb-1">
+                                        <button data-testid='cart-item-amount-increase' onClick={() => this.handleIncrement(product.id, JSON.stringify(product.attributes))} className="btn btn-sm btn-outline-primary mb-1">
                                             <FaPlus />
                                         </button>
-                                        <button onClick={() => this.handleDecrement(product.id, JSON.stringify(product.attributes))} className="btn btn-sm btn-outline-secondary">
+                                        <button data-testid='cart-item-amount-decrease' onClick={() => this.handleDecrement(product.id, JSON.stringify(product.attributes))} className="btn btn-sm btn-outline-secondary">
                                             <FaMinus />
                                         </button>
                                     </div>
@@ -106,7 +93,7 @@ class CartWidget extends Component {
                                 </div>
                             </div>
                         ))}
-                        
+
                     </>
                 )}
 
@@ -114,7 +101,7 @@ class CartWidget extends Component {
                     <div className='align-items-start'>
                         Total:
                     </div>
-                    <div className='d-flex justify-content-end align-items-center'>
+                    <div data-testid='cart-total' className='d-flex justify-content-end align-items-center'>
                         {totalPrice}
                     </div>
                 </h6>

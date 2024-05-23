@@ -56,7 +56,7 @@ class CardSet extends Component {
         return (
             <div className="card-set d-flex flex-wrap justify-content-center align-items-center mt-2">
                 {cardData.map((card, index) => (
-                    <div key={index} className="card col-12 col-sm-6 col-md-4 col-lg-4 m-3" onClick={() => this.handleCardClick(index)}>
+                    <div key={index} data-testid={`product-${card.name} `} className="card col-12 col-sm-6 col-md-4 col-lg-4 m-3" onClick={() => this.handleCardClick(index)}>
                         <div className="product-card">
                             <div className={`${card.inStock ? '' : 'out-of-stock'}`}>
                                 <div className={`shadow-select ${card.isSelected ? 'selected' : ''}`}>

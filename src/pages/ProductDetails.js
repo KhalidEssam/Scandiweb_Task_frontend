@@ -72,7 +72,7 @@ class ProductDetails extends Component {
 
         return (
             <div className="product-details container d-flex flex-wrap">
-                <div className="col-12 col-sm-6 col-md-6 d-flex flex-wrap justify-content-start">
+                <div data-testid='product-gallery' className="col-12 col-sm-6 col-md-6 d-flex flex-wrap justify-content-start">
                     <div className="gallery col-12 col-sm-3 col-md-2 d-flex flex-column justify-content-start">
                         {product.gallery && product.gallery.map((image, index) => (
                             <img key={index} src={image} alt={product.name} className="img-fluid mh-10 mb-2" />
@@ -101,7 +101,7 @@ class ProductDetails extends Component {
                         {product.attributes && product.attributes.map((attribute, index) => (
                             <div key={index} className="d-flex flex-column align-items-start mb-3">
                                 <h5>{attribute.name}:</h5>
-                                <div className="d-flex flex-wrap align-items-start">
+                                <div data-testid={`product-attribute-${attribute.name}`} className="d-flex flex-wrap align-items-start">
                                     {attribute.items.map((item, index) => (
                                         <li
                                             key={index}
@@ -125,11 +125,13 @@ class ProductDetails extends Component {
                             </Link>
                         ) : (
                             <div className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
-                                <div className="btn btn-success btn-lg">
+                                <div data-testid='add-to-cart' className="btn btn-success btn-lg">
                                     Add to cart
                                 </div>
                             </div>
                         )}
+                    </div>
+                    <div data-testid='product-description' className="product-description">
                         {parse(sanitizedDescription)}
                     </div>
                 </div>

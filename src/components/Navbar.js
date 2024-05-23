@@ -5,7 +5,7 @@ import { setActiveOption } from '../Store/slices/navbarSlice';
 
 function Navbar({ onToggle, options }) {
     const activeOption = useSelector((state) => state.navbar.activeOption);
-    const cartItems = useSelector(state => state.cartItems.cartItems).map(item => item.count || 1).reduce((a, b) => a + b, 0) ;
+    const cartItems = useSelector(state => state.cartItems.cartItems).map(item => item.count || 1).reduce((a, b) => a + b, 0);
     const dispatch = useDispatch();
 
     const handleOptionClick = (option) => {
@@ -30,21 +30,23 @@ function Navbar({ onToggle, options }) {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         {options && options.map((option, index) => (
-                        <li key={index} className={`nav-item ${activeOption === option ? 'selected' : ''}`}>
-                            <a
-                                className={`nav-link ${activeOption === option ? 'active' : ''}`}
-                                onClick={() => handleOptionClick(option)}
-                                href={`#${option}`}
-                                
-                            >
-                                {option}
-                            </a>
-                        </li>
-                    ))}
+                            <li key={index}
+                                data-testid='category-link' className={`nav-item ${activeOption === option ? 'selected' : ''}`}>
+                                <a
+                                    className={`nav-link ${activeOption === option ? 'active' : ''}`}
+                                    onClick={() => handleOptionClick(option)}
+                                    data-testid={`${activeOption === option ? 'active-category-link' : 'category-link'}`}
+                                    href={`#${option}`}
+
+                                >
+                                    {option}
+                                </a>
+                            </li>
+                        ))}
                     </ul>
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item position-relative" onClick={onToggle}>
-                            <GrCart size={28} />
+                            <GrCart size={28} data-testid='cart-btn' />
                             {cartItems > 0 && (
                                 <span className="badge bg-dark position-absolute top-0 start-100 translate-middle rounded-pill">
                                     {cartItems}
