@@ -18,6 +18,8 @@ class FetchQuery extends Component {
     }
 
     fetchData() {
+        // console.log('fetching data...');
+
         const { query } = this.props;
 
         fetch('http://localhost/fullstack_assignment/gql_test/src/graphql.php', {
@@ -37,7 +39,7 @@ class FetchQuery extends Component {
 
                 // Dispatch products data to Redux store
                 this.props.productsLoading();
-                
+
 
                 this.props.productsSuccess(data.data.products.map(product => product.name));
 

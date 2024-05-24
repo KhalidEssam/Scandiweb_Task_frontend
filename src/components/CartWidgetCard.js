@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import { updateCartItemQuantity, removeItemFromCart } from '../Store/slices/cartItemsSlice.js'; // Ensure this action is correctly implemented
+import HndleOrderProdcessing from '../services/FetchQuery.js';
 
 class CartWidget extends Component {
     constructor(props) {
@@ -10,6 +11,110 @@ class CartWidget extends Component {
             isToggled: this.props.isToggled,
         };
     }
+
+    handlePlaceOrder = async () => {
+
+        const { cartItems } = this.props; // Access cartItems from state
+
+        const totalPrice = this.calculateTotalPrice();
+
+        const filterSelectedAttributes = (products) => {
+            return products.map(product => {
+                // Create a new object with filtered attributes
+                const filteredAttributes = product.attributes.map(attribute => {
+                    // Check if the attribute has only one item and it is selected
+                    if (attribute.items.length === 1 && attribute.items[0].isSelected) {
+                        // If selected, keep only the selected item
+                        return attribute.items[0];
+                    } else {
+                        // If not selected or has multiple items, filter out unselected items
+                        const selectedItems = attribute.items.filter(item => item.isSelected);
+                        // Return a new object with the selected items
+                        return { ...attribute, items: selectedItems };
+                    }
+                });
+                // Return a new object with filtered attributes
+                return { ...product, attributes: filteredAttributes };
+            });
+        };
+        let NewCartItems = filterSelectedAttributes(cartItems);
+
+        function generateOrderMutation(items, totalPrice) {
+            const mutation = `
+    mutation {
+      createOrder(input: {
+        items: [
+          ${items.map(item => `
+            {
+              id: "${item.id}",
+              name: "${item.name}",
+              inStock: ${item.inStock},
+              gallery: [${item.gallery.map(image => `"${image}"`).join(', ')}],
+              description: "${item.description}",
+              category: "${item.category}",
+              attributes: [
+                ${item.attributes.map(attribute => `
+                  {
+                    id: "${attribute.id}",
+                    ${attribute.items.map(item => `
+                      displayValue: "${item.displayValue}",
+                      value: "${item.value}",
+                      isSelected: ${item.isSelected}`).join(', ')}
+                  }
+                `).join(', ')}
+              ],
+              prices: [
+                ${item.prices.map(price => `
+                  {
+                    amount: ${price.amount},
+                    currency: { label: "${price.currency.label}", symbol: "${price.currency.symbol}" }
+                  }
+                `).join(', ')}
+              ],
+              brand: "${item.brand}",
+              count: ${item.count}
+            }
+          `).join(', ')}
+        ],
+        totalPrice: ${totalPrice}
+      }) {
+        id,
+        status
+      }
+    }
+  `;
+            return mutation;
+        }
+        const orderMutation = generateOrderMutation(NewCartItems, totalPrice);
+
+        try {
+            const response = await fetch('http://localhost/fullstack_assignment/gql_test/src/graphql.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "query": orderMutation
+                }
+
+                ),
+            })
+            // .then(response => response.json());
+
+            const data = await response.json();
+            console.log(data); // Log the response data
+
+            // Handle the response data as needed
+        } catch (error) {
+            console.error('Error occurred while executing mutation:', error);
+            // Handle the error
+        }
+        return <div class="alert alert-success" role="alert">
+            Order was placed successfully with id:
+        </div>
+
+    };
+
 
     calculateTotalPrice = () => {
         const { cartItems } = this.props;
@@ -107,7 +212,8 @@ class CartWidget extends Component {
                 </h6>
 
 
-                <button className={`btn ${cartItems.length > 0 ? 'btn-success' : 'btn-secondary'} mt-3 mb-3`}>
+                <button className={`btn ${cartItems.length > 0 ? 'btn-success' : 'btn-secondary'} mt-3 mb-3`}
+                    onClick={this.handlePlaceOrder} disabled={cartItems.length === 0}>
                     PLACE ORDER
                 </button>
             </div>
