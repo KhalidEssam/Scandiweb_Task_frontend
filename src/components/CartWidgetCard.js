@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FaPlus, FaMinus } from 'react-icons/fa';
-import { updateCartItemQuantity, removeItemFromCart } from '../Store/slices/cartItemsSlice.js'; // Ensure this action is correctly implemented
-import HndleOrderProdcessing from '../services/FetchQuery.js';
+import { updateCartItemQuantity, removeItemFromCart , clearCart } from '../Store/slices/cartItemsSlice.js'; // Ensure this action is correctly implemented
 
 class CartWidget extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            cartItems: this.props.cartItems,
             isToggled: this.props.isToggled,
+            alert: 0,
         };
     }
 
     handlePlaceOrder = async () => {
-
         const { cartItems } = this.props; // Access cartItems from state
-
         const totalPrice = this.calculateTotalPrice();
 
         const filterSelectedAttributes = (products) => {
@@ -37,6 +36,7 @@ class CartWidget extends Component {
                 return { ...product, attributes: filteredAttributes };
             });
         };
+
         let NewCartItems = filterSelectedAttributes(cartItems);
 
         function generateOrderMutation(items, totalPrice) {
@@ -85,7 +85,9 @@ class CartWidget extends Component {
   `;
             return mutation;
         }
+
         const orderMutation = generateOrderMutation(NewCartItems, totalPrice);
+        const { clearCart } = this.props;
 
         try {
             const response = await fetch('http://localhost/fullstack_assignment/gql_test/src/graphql.php', {
@@ -94,27 +96,21 @@ class CartWidget extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "query": orderMutation
-                }
-
-                ),
-            })
-            // .then(response => response.json());
+                    query: orderMutation
+                }),
+            });
 
             const data = await response.json();
-            console.log(data); // Log the response data
 
-            // Handle the response data as needed
+            if (data) {
+                this.setState({ alert: data.data.createOrder['id'] });
+                clearCart(this.state.cartItems);
+                // this.setState({ cartItems: [] });
+            }
         } catch (error) {
             console.error('Error occurred while executing mutation:', error);
-            // Handle the error
         }
-        return <div class="alert alert-success" role="alert">
-            Order was placed successfully with id:
-        </div>
-
     };
-
 
     calculateTotalPrice = () => {
         const { cartItems } = this.props;
@@ -152,20 +148,20 @@ class CartWidget extends Component {
             return `${id}-${JSON.stringify(attributes)}`;
         };
 
+
         return (
-            <div className={` container cart-products d-${isToggled ? 'block' : 'none'}`}   >
-                {isToggled && (
+            <div className={`container cart-products d-${isToggled ? 'block' : 'none'}`}>
+                
+                {isToggled ? (
                     <>
                         <div className='d-flex justify-content-start'>
-                            <h5>
-                                My Bag
-                            </h5>
-                            <h6 className=' ms-3 mt-2'> {totalItems}  {totalItems && totalItems > 1 ? ' items' : ' item'} </h6>
+                            <h5>My Bag</h5>
+                            <h6 className='ms-3 mt-2'>{totalItems} {totalItems > 1 ? 'items' : 'item'}</h6>
                         </div>
                         {cartItems.map(product => (
-                            <div key={generateKey(product.id, product.attributes)} className="d-flex flex-wrap justify-content-between align-items-center" >
+                            <div key={generateKey(product.id, product.attributes)} className="d-flex flex-wrap justify-content-between align-items-center">
                                 <div className="d-flex flex-wrap flex-column align-items-start">
-                                    <strong><h6>{product.name} (x{(product.count) || 1})</h6> </strong>
+                                    <strong><h6>{product.name} (x{(product.count) || 1})</h6></strong>
                                     <p data-testid='cart-item-amount'>Price: {product.prices[0].amount}</p>
                                     {product.attributes && product.attributes.map((attribute, index) => (
                                         <div key={index} data-testid={`cart-item-attribute-${attribute.name}`} className="d-flex flex-column align-items-start mb-3">
@@ -200,7 +196,7 @@ class CartWidget extends Component {
                         ))}
 
                     </>
-                )}
+                ) : ( this.state.alert !== 0 && (this.setState({ alert: 0})))}
 
                 <h6 className='d-flex flex-wrap justify-content-between align-items-center'>
                     <div className='align-items-start'>
@@ -211,11 +207,17 @@ class CartWidget extends Component {
                     </div>
                 </h6>
 
-
                 <button className={`btn ${cartItems.length > 0 ? 'btn-success' : 'btn-secondary'} mt-3 mb-3`}
                     onClick={this.handlePlaceOrder} disabled={cartItems.length === 0}>
                     PLACE ORDER
                 </button>
+
+                {this.state.alert !== 0 && (
+                    <div className="alert alert-success mt-3" role="alert">
+                        Order was placed successfully with id: {this.state.alert}.
+                    </div>
+                    
+                )}
             </div>
         );
     }
@@ -227,7 +229,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     updateCartItemQuantity,
-    removeItemFromCart
+    removeItemFromCart,
+    clearCart,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartWidget);

@@ -130,10 +130,12 @@ class ProductDetails extends Component {
                                 </div>
                             </div>
                         )}
+
+                        <div data-testid='product-description' className="product-description">
+                            {parse(sanitizedDescription)}
+                        </div>
                     </div>
-                    <div data-testid='product-description' className="product-description">
-                        {parse(sanitizedDescription)}
-                    </div>
+                    
                 </div>
             </div>
         );

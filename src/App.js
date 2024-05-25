@@ -50,6 +50,8 @@ function App() {
 
         <Routes>
           <Route path='/' element={<ProductListing />} />
+          <Route path='/products/:id' element={<ProductListing />} />
+
 
           <Route path="/product/:id" element={<ProductDetails />} />
 

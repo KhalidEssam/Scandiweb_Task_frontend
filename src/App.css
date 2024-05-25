@@ -138,6 +138,9 @@
 
 .details{
   margin-left: auto;
+    caret-color: transparent;
+
+
 }
 
 .cart-btn {

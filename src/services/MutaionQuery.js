@@ -5,13 +5,15 @@ class OrderComponent extends Component {
         alertMessage: null,
     };
 
-    calculateTotalPrice = () => {
-        // Placeholder function. Implement your logic to calculate the total price.
-        return 2556.17;
-    };
+    componentDidMount() {
+        this.handlePlaceOrder();
+    }
 
     handlePlaceOrder = async () => {
         const { cartItems, totalPrice } = this.props;
+        if (cartItems.length === 0) {
+            return 0;
+        }
         const filterSelectedAttributes = (products) => {
             return products.map((product) => {
                 const filteredAttributes = product.attributes.map((attribute) => {
@@ -81,6 +83,7 @@ class OrderComponent extends Component {
         }
 
         const orderMutation = generateOrderMutation(NewCartItems, totalPrice);
+        // console.log(orderMutation);
 
         try {
             const response = await fetch('http://localhost/fullstack_assignment/gql_test/src/graphql.php', {
