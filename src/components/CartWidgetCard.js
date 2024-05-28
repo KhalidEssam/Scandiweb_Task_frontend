@@ -41,13 +41,12 @@ class CartWidget extends Component {
 
         let NewCartItems = filterSelectedAttributes(cartItems);
         const orderMutation = generateOrderMutation(NewCartItems, totalPrice);
-        console.log(orderMutation);
         const { clearCart } = this.props;
 
         try {
             const response = await fetch(
-                'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
-                // 'https://ecommercescandweb.000webhostapp.com/Fullstack_assignment/gql_test/src/graphql.php',
+                // 'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
+                'https://ecommercescandweb.000webhostapp.com/Fullstack_assignment/gql_test/src/graphql.php',
                 {
                     method: 'POST',
                     // mode: 'no-cors',
@@ -74,7 +73,7 @@ class CartWidget extends Component {
     calculateTotalPrice = () => {
         const { cartItems } = this.props;
         return cartItems.reduce((total, product) => {
-            const productTotal = product.prices[0].amount * (product.count || 1);
+            const productTotal = product.prices.amount * (product.count || 1);
             return total + productTotal;
         }, 0).toFixed(2); // Ensure the total price is displayed correctly
     };
@@ -121,14 +120,14 @@ class CartWidget extends Component {
                             <div key={generateKey(product.id, product.attributes)} className="d-flex flex-wrap justify-content-between align-items-center">
                                 <div className="d-flex flex-wrap flex-column align-items-start">
                                     <strong><h6>{product.name} (x{(product.count) || 1})</h6></strong>
-                                    <p data-testid='cart-item-amount'>Price: {product.prices[0].amount}</p>
+                                    <p data-testid='cart-item-amount'>Price: {product.prices.amount}</p>
                                     {product.attributes && product.attributes.map((attribute, index) => (
-                                        <div key={index} data-testid={`cart-item-attribute-${kebabCase(attribute.name)}`} className="d-flex flex-column align-items-start mb-3">
-                                            <div className="h6">{attribute.name}:</div>
+                                        <div key={index} data-testid={`cart-item-attribute-${kebabCase(attribute.id)}`} className="d-flex flex-column align-items-start mb-3">
+                                            <div className="h6">{attribute.id}:</div>
                                             <div className="d-flex flex-wrap">
                                                 {attribute.items.map((item, index) => (
                                                     <li
-                                                        data-testid={`cart-item-attribute-${kebabCase(attribute.name)}-${item.value.toLowerCase()}${item.isSelected ? '-selected' : ''}`}
+                                                        data-testid={`cart-item-attribute-${kebabCase(attribute.id)}-${item.value.toLowerCase()}${item.isSelected ? '-selected' : ''}`}
                                                         key={index}
                                                         className={`item-border p-2 m-1 option-select ${item.isSelected ? 'selected' : ''}`}
                                                         style={attribute.id === "Color" ? { backgroundColor: item.value } : {}}

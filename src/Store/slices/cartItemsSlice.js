@@ -10,20 +10,33 @@ const cartSlice = createSlice({
     reducers: {
         addItemToCart(state, action) {
             const newItem = action.payload;
-            newItem.count = 1;
 
             // Check if the item already exists in cart
-            const existingItem = state.cartItems.find(item =>
+            const existingItemIndex = state.cartItems.findIndex(item =>
                 item.id === newItem.id && JSON.stringify(item.attributes) === JSON.stringify(newItem.attributes)
             );
-            if (existingItem) {
+
+            if (existingItemIndex !== -1) {
                 // If item exists, increase its count
-                existingItem.count += 1;
+                const updatedCartItems = state.cartItems.map((item, index) =>
+                    index === existingItemIndex
+                        ? { ...item, count: item.count + 1 }
+                        : item
+                );
+                return {
+                    ...state,
+                    cartItems: updatedCartItems
+                };
             } else {
                 // If item doesn't exist, add it to cart
-                state.cartItems.push(newItem);
+                const newCartItem = { ...newItem, count: 1 };
+                return {
+                    ...state,
+                    cartItems: [...state.cartItems, newCartItem]
+                };
             }
         },
+
         removeItemFromCart: (state, action) => {
             const { itemIdToRemove, attributes } = action.payload;
             state.cartItems = state.cartItems.filter(item =>

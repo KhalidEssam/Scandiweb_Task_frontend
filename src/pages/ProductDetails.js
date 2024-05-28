@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link, useParams } from 'react-router-dom';
-import { Products } from '../data/data.js';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { connect } from 'react-redux';
 import { addItemToCart } from '../Store/slices/cartItemsSlice.js';
@@ -10,19 +9,16 @@ import DOMPurify from 'dompurify';
 import parse from 'html-react-parser';
 import { kebabCase } from '../data/data.js';
 
-
-
 const withRouter = (WrappedComponent) => (props) => {
     const params = useParams();
     return <WrappedComponent {...props} params={params} />;
 };
 
 class ProductDetails extends Component {
-
     constructor(props) {
         super(props);
         const { id } = props.params;
-        const product = Products.find(product => product.id === id);
+        const product = this.props.products.find(product => product.id === id);
 
         this.state = {
             product: product || null,
@@ -34,6 +30,8 @@ class ProductDetails extends Component {
 
         if (product && this.allAttributesSelected()) {
             this.props.addItemToCart(product);
+
+
         } else {
             alert("Please select an option for all attributes.");
         }
@@ -71,7 +69,10 @@ class ProductDetails extends Component {
             return <div>Product not found</div>;
         }
 
-        const sanitizedDescription = DOMPurify.sanitize(product.description);
+        let sanitizedDescription = DOMPurify.sanitize(product.description);
+        sanitizedDescription = sanitizedDescription.replace(/\\n/g, '<br>');
+
+
 
         return (
             <div className="product-details container d-flex flex-wrap">
@@ -103,8 +104,9 @@ class ProductDetails extends Component {
                         <h1>{product.name}</h1>
                         {product.attributes && product.attributes.map((attribute, index) => (
                             <div key={index} className="d-flex flex-column align-items-start mb-3">
-                                <h5>{attribute.name}:</h5>
-                                <div data-testid={`product-attribute-${kebabCase(attribute.name)}`} className="d-flex flex-wrap align-items-start">
+                                {/* {console.log(attribute)} */}
+                                <h5>{attribute.id}:</h5>
+                                <div data-testid={`product-attribute-${kebabCase(attribute.id)}`} className="d-flex flex-wrap align-items-start">
                                     {attribute.items.map((item, index) => (
                                         <li
                                             key={index}
@@ -119,7 +121,7 @@ class ProductDetails extends Component {
                             </div>
                         ))}
                         <h5 className="mb-3">Price: </h5>
-                        {product.prices && `${product.prices[0].currency.label} ${product.prices[0].amount}`}
+                        {product.prices && `${product.prices.currency.label} ${product.prices.amount}`}
                         {this.allAttributesSelected() ? (
                             <Link to="/" className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
                                 <div data-testid='add-to-cart' className="btn btn-success btn-lg">
@@ -145,13 +147,17 @@ class ProductDetails extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({
+    products: state.products.products,
+});
+
 const mapDispatchToProps = {
     addItemToCart,
 };
 
 // Higher Order Component to wrap ProductDetails with connect and withRouter
 const withConnectAndRouter = (Component) => {
-    const ConnectedComponent = connect(null, mapDispatchToProps)(Component);
+    const ConnectedComponent = connect(mapStateToProps, mapDispatchToProps)(Component);
     return withRouter(ConnectedComponent);
 };
 
