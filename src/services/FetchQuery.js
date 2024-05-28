@@ -17,41 +17,44 @@ class FetchQuery extends Component {
         this.fetchData();
     }
 
-    fetchData() {
-        // console.log('fetching data...');
+    fetchData = async () => {
+        const { query, onLoadingChange } = this.props;
 
-        const { query } = this.props;
+        try {
+            onLoadingChange(true); // Notify App component that loading has started
 
-        fetch('http://localhost/fullstack_assignment/gql_test/src/graphql.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ query }),
-        })
-            .then(response => response.json())
-            .then(data => {
+            const response = await fetch(
+                'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query }),
+                }
+            );
 
+            const data = await response.json();
 
-                // Dispatch categories data to Redux store
-                this.props.categoriesLoading();
-                this.props.categoriesSuccess(data.data.categories.map(category => category.name));
+            // Dispatch categories data to Redux store
+            this.props.categoriesLoading();
+            this.props.categoriesSuccess(data.data.categories.map(category => category.name));
 
-                // Dispatch products data to Redux store
-                this.props.productsLoading();
+            // Dispatch products data to Redux store
+            this.props.productsLoading();
+            this.props.productsSuccess(data.data.products);
 
+            this.setState({ loading: false, data });
+            onLoadingChange(false); // Notify App component that loading has finished
 
-                this.props.productsSuccess(data.data.products.map(product => product.name));
-
-                this.setState({ loading: false, data });
-            })
-            .catch(error => {
-                this.setState({ loading: false, error: error.message });
-            });
+        } catch (error) {
+            this.setState({ loading: false, error: error.message });
+            onLoadingChange(false); // Notify App component that loading has finished
+        }
     }
 
     render() {
-        return <></>;
+        return null; // No UI needed for this component
     }
 }
 

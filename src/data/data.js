@@ -518,58 +518,6 @@ export const Products = [
 
 
 
-
-
-
-
-
-
-
-
-// [
-//     {
-//         "id": "nast_niky_shoes",
-//         "name": "nast niky shoes",
-//         "inStock": true,
-//         "description": "nast niky shoes",
-//         "gallery": [
-//             "https://images.canadagoose.com/image/upload/w_480,c_scale,f_auto,q_auto:best/v1576016105/product-image/2409L_61.jpg",
-//             "https://images.canadagoose.com/image/upload/w_480,c_scale,f_auto,q_auto:best/v1576016107/product-image/2409L_61_a.jpg"
-//         ],
-//         "__typename": "Product",
-//         "category": "Clothes",
-//         "brand": "nast niky",
-//         "prices": {
-//             "amount": 150,
-//             "currency": {
-//                 "label": "Euro",
-//                 "symbol": "€"
-//             },
-//             "__typename": "Price"
-//         },
-//         "attributes": {
-//             "id": "Size",
-//             "items": [
-//                 {
-//                     "id": "Red",
-//                     "displayValue": "Red"
-//                 },
-//                 {
-//                     "id": "Small",
-//                     "displayValue": "Small"
-//                 }
-//             ],
-//             "__typename": "AttributeSet"
-//         }
-//     }, 
-//     {
-//         "id": "nast_niky_shoes",
-//         "name": "nast niky shoes", }
-// ];
-
-
-
-
 // GraphQL query string
 export const Query = `
 {
@@ -611,6 +559,61 @@ export const Query = `
 }
 
 `;
+
+
+export function generateOrderMutation(items, totalPrice) {
+    const mutation = `
+    mutation {
+      createOrder(input: {
+        items: [
+          ${items.map(item => `
+            {
+              id: "${item.id}",
+              name: "${item.name}",
+              inStock: ${item.inStock},
+              gallery: [${item.gallery.map(image => `"${image}"`).join(', ')}],
+              description: "${item.description}",
+              category: "${item.category}",
+              attributes: [
+                ${item.attributes.map(attribute => `
+                  {
+                    id: "${attribute.id}",
+                    ${attribute.items.map(item => `
+                      displayValue: "${item.displayValue}",
+                      value: "${item.value}",
+                      isSelected: ${item.isSelected}`).join(', ')}
+                  }
+                `).join(', ')}
+              ],
+              prices: [
+                ${item.prices.map(price => `
+                  {
+                    amount: ${price.amount},
+                    currency: { label: "${price.currency.label}", symbol: "${price.currency.symbol}" }
+                  }
+                `).join(', ')}
+              ],
+              brand: "${item.brand}",
+              count: ${item.count}
+            }
+          `).join(', ')}
+        ],
+        totalPrice: ${totalPrice}
+      }) {
+        id,
+        status
+      }
+    }
+  `;
+    return mutation;
+}
+
+
+export const kebabCase = string => string
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .replace(/[\s_]+/g, '-')
+    .toLowerCase();
+
 
 
 

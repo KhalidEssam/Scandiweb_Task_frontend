@@ -32,7 +32,7 @@ class Navbar extends Component {
                         <ul className="navbar-nav">
                             {options && options.map((option, index) => (
                                 <li key={index}
-                                    data-testid='category-link' className={`nav-item ${activeOption === option ? 'selected' : ''}`}>
+                                    className={`nav-item ${activeOption === option ? 'selected' : ''}`}>
 
                                     <Link
                                         className={`nav-link ${activeOption === option ? 'active' : ''}`}

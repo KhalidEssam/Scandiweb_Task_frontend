@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FaPlus, FaMinus } from 'react-icons/fa';
-import { updateCartItemQuantity, removeItemFromCart , clearCart } from '../Store/slices/cartItemsSlice.js'; // Ensure this action is correctly implemented
+import { updateCartItemQuantity, removeItemFromCart, clearCart } from '../Store/slices/cartItemsSlice.js'; // Ensure this action is correctly implemented
+
+import { generateOrderMutation, kebabCase } from '../data/data.js';
 
 class CartWidget extends Component {
     constructor(props) {
@@ -38,67 +40,24 @@ class CartWidget extends Component {
         };
 
         let NewCartItems = filterSelectedAttributes(cartItems);
-
-        function generateOrderMutation(items, totalPrice) {
-            const mutation = `
-    mutation {
-      createOrder(input: {
-        items: [
-          ${items.map(item => `
-            {
-              id: "${item.id}",
-              name: "${item.name}",
-              inStock: ${item.inStock},
-              gallery: [${item.gallery.map(image => `"${image}"`).join(', ')}],
-              description: "${item.description}",
-              category: "${item.category}",
-              attributes: [
-                ${item.attributes.map(attribute => `
-                  {
-                    id: "${attribute.id}",
-                    ${attribute.items.map(item => `
-                      displayValue: "${item.displayValue}",
-                      value: "${item.value}",
-                      isSelected: ${item.isSelected}`).join(', ')}
-                  }
-                `).join(', ')}
-              ],
-              prices: [
-                ${item.prices.map(price => `
-                  {
-                    amount: ${price.amount},
-                    currency: { label: "${price.currency.label}", symbol: "${price.currency.symbol}" }
-                  }
-                `).join(', ')}
-              ],
-              brand: "${item.brand}",
-              count: ${item.count}
-            }
-          `).join(', ')}
-        ],
-        totalPrice: ${totalPrice}
-      }) {
-        id,
-        status
-      }
-    }
-  `;
-            return mutation;
-        }
-
         const orderMutation = generateOrderMutation(NewCartItems, totalPrice);
+        console.log(orderMutation);
         const { clearCart } = this.props;
 
         try {
-            const response = await fetch('http://localhost/fullstack_assignment/gql_test/src/graphql.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    query: orderMutation
-                }),
-            });
+            const response = await fetch(
+                'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
+                // 'https://ecommercescandweb.000webhostapp.com/Fullstack_assignment/gql_test/src/graphql.php',
+                {
+                    method: 'POST',
+                    // mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: orderMutation
+                    }),
+                });
 
             const data = await response.json();
 
@@ -151,7 +110,7 @@ class CartWidget extends Component {
 
         return (
             <div className={`container cart-products d-${isToggled ? 'block' : 'none'}`}>
-                
+
                 {isToggled ? (
                     <>
                         <div className='d-flex justify-content-start'>
@@ -164,12 +123,12 @@ class CartWidget extends Component {
                                     <strong><h6>{product.name} (x{(product.count) || 1})</h6></strong>
                                     <p data-testid='cart-item-amount'>Price: {product.prices[0].amount}</p>
                                     {product.attributes && product.attributes.map((attribute, index) => (
-                                        <div key={index} data-testid={`cart-item-attribute-${attribute.name}`} className="d-flex flex-column align-items-start mb-3">
+                                        <div key={index} data-testid={`cart-item-attribute-${kebabCase(attribute.name)}`} className="d-flex flex-column align-items-start mb-3">
                                             <div className="h6">{attribute.name}:</div>
                                             <div className="d-flex flex-wrap">
                                                 {attribute.items.map((item, index) => (
                                                     <li
-                                                        data-testid={`cart-item-attribute-${attribute.name}-${item.value}${item.isSelected ? '-selected' : ''}`}
+                                                        data-testid={`cart-item-attribute-${kebabCase(attribute.name)}-${item.value.toLowerCase()}${item.isSelected ? '-selected' : ''}`}
                                                         key={index}
                                                         className={`item-border p-2 m-1 option-select ${item.isSelected ? 'selected' : ''}`}
                                                         style={attribute.id === "Color" ? { backgroundColor: item.value } : {}}
@@ -194,10 +153,8 @@ class CartWidget extends Component {
                                 </div>
                             </div>
                         ))}
-
                     </>
-                ) : ( this.state.alert !== 0 && (this.setState({ alert: 0})))}
-
+                ) : (this.state.alert !== 0 && (this.setState({ alert: 0 })))}
                 <h6 className='d-flex flex-wrap justify-content-between align-items-center'>
                     <div className='align-items-start'>
                         Total:
@@ -216,7 +173,7 @@ class CartWidget extends Component {
                     <div className="alert alert-success mt-3" role="alert">
                         Order was placed successfully with id: {this.state.alert}.
                     </div>
-                    
+
                 )}
             </div>
         );

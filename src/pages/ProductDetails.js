@@ -8,6 +8,9 @@ import 'swiper/swiper-bundle.css';
 import 'swiper/css/navigation';
 import DOMPurify from 'dompurify';
 import parse from 'html-react-parser';
+import { kebabCase } from '../data/data.js';
+
+
 
 const withRouter = (WrappedComponent) => (props) => {
     const params = useParams();
@@ -101,7 +104,7 @@ class ProductDetails extends Component {
                         {product.attributes && product.attributes.map((attribute, index) => (
                             <div key={index} className="d-flex flex-column align-items-start mb-3">
                                 <h5>{attribute.name}:</h5>
-                                <div data-testid={`product-attribute-${attribute.name}`} className="d-flex flex-wrap align-items-start">
+                                <div data-testid={`product-attribute-${kebabCase(attribute.name)}`} className="d-flex flex-wrap align-items-start">
                                     {attribute.items.map((item, index) => (
                                         <li
                                             key={index}
@@ -119,7 +122,7 @@ class ProductDetails extends Component {
                         {product.prices && `${product.prices[0].currency.label} ${product.prices[0].amount}`}
                         {this.allAttributesSelected() ? (
                             <Link to="/" className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
-                                <div className="btn btn-success btn-lg">
+                                <div data-testid='add-to-cart' className="btn btn-success btn-lg">
                                     Add to cart
                                 </div>
                             </Link>
@@ -135,7 +138,7 @@ class ProductDetails extends Component {
                             {parse(sanitizedDescription)}
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         );
