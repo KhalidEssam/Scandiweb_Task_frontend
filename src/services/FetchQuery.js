@@ -24,8 +24,8 @@ class FetchQuery extends Component {
             onLoadingChange(true); // Notify App component that loading has started
 
             const response = await fetch(
-                // 'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
-                'https://ecommercescandweb.000webhostapp.com/Fullstack_assignment/gql_test/src/graphql.php',
+                'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
+                // 'https://ecommercescandweb.000webhostapp.com/Fullstack_assignment/gql_test/src/graphql.php',
                 {
                     method: 'POST',
                     headers: {

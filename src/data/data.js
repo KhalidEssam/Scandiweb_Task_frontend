@@ -40,9 +40,10 @@ export const Query = `
 
 `;
 
+// GraphQL generateOrderMutation string
 
 export function generateOrderMutation(items, totalPrice) {
-    const mutation = `
+  const mutation = `
     mutation {
       createOrder(input: {
         items: [
@@ -51,19 +52,15 @@ export function generateOrderMutation(items, totalPrice) {
               id: "${item.id}",
               name: "${item.name}",
               inStock: ${item.inStock},
-              gallery: [${item.gallery.map(image => `"${image}"`).join(', ')}],
-              description: "${item.description}",
-              category: "${item.category}",
               attributes: [
                 ${item.attributes.map(attribute => `
                   {
                     id: "${attribute.id}",
                     ${attribute.items.map(item => `
                       displayValue: "${item.displayValue}",
-                      value: "${item.value}",
-                      isSelected: ${item.isSelected}`).join(', ')}
+                      value: "${item.value}",`).join(', ')}
                   }
-                `).join(', ')}
+                `).join(',')}
               ],
               prices: [
                   {
@@ -71,8 +68,7 @@ export function generateOrderMutation(items, totalPrice) {
                     currency: { label: "${item.prices.currency.label}", symbol: "${item.prices.currency.symbol}" }
                   },
               ],
-              brand: "${item.brand}",
-              count: ${item.count}
+              count: ${item.count},
             }
           `).join(', ')}
         ],
@@ -83,18 +79,11 @@ export function generateOrderMutation(items, totalPrice) {
       }
     }
   `;
-    return mutation;
+  return mutation;
 }
 
-
+// kebabCase string conversion
 export const kebabCase = string => string
-    .replace(/([a-z])([A-Z])/g, "$1-$2")
-    .replace(/[\s_]+/g, '-')
-    .toLowerCase();
-
-
-
-
-
-
-// export default CardData;
+  .replace(/([a-z])([A-Z])/g, "$1-$2")
+  .replace(/[\s_]+/g, '-')
+  .toLowerCase();
