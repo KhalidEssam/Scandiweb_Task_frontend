@@ -63,8 +63,10 @@ class CartWidget extends Component {
             if (data) {
                 this.setState({ alert: data.data.createOrder['id'] });
                 clearCart(this.state.cartItems);
-                // this.setState({ cartItems: [] });
+            } else {
+                console.error('Error occurred while executing mutation:', data);
             }
+
         } catch (error) {
             console.error('Error occurred while executing mutation:', error);
         }
@@ -72,6 +74,9 @@ class CartWidget extends Component {
 
     calculateTotalPrice = () => {
         const { cartItems } = this.props;
+        if (cartItems === undefined || cartItems.length === 0) {
+            return 0.00;
+        }
         return cartItems.reduce((total, product) => {
             const productTotal = product.prices.amount * (product.count || 1);
             return total + productTotal;
@@ -120,7 +125,7 @@ class CartWidget extends Component {
                             <div key={generateKey(product.id, product.attributes)} className="d-flex flex-wrap justify-content-between align-items-center">
                                 <div className="d-flex flex-wrap flex-column align-items-start">
                                     <strong><h6>{product.name} (x{(product.count) || 1})</h6></strong>
-                                    <p data-testid='cart-item-amount'>Price: {product.prices.amount}</p>
+                                    <p data-testid='cart-item-amount'>Price: {product.prices.amount + " " + product.prices.currency['symbol']}</p>
                                     {product.attributes && product.attributes.map((attribute, index) => (
                                         <div key={index} data-testid={`cart-item-attribute-${kebabCase(attribute.id)}`} className="d-flex flex-column align-items-start mb-3">
                                             <div className="h6">{attribute.id}:</div>
@@ -159,7 +164,7 @@ class CartWidget extends Component {
                         Total:
                     </div>
                     <div data-testid='cart-total' className='d-flex justify-content-end align-items-center'>
-                        {totalPrice}
+                        {totalPrice + " " + (cartItems[0] ? cartItems[0].prices.currency['symbol'] : "")}
                     </div>
                 </h6>
 
