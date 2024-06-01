@@ -2,6 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Live demo shall be found here (https://ecommercescandweb.000webhostapp.com) Note: it might require a vpn access.
+
 ## Available Scripts
 
 In the project directory, you can run:
