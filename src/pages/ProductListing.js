@@ -7,15 +7,12 @@ import { connect } from 'react-redux';
 
 class ProductListing extends Component {
     render() {
-        const { products } = this.props;
+        const { products , activeOption } = this.props;
 
         return (
             <>
-            {products && <CardSet cardData={products} /> }
-
+                {products && <CardSet cardData={products} activeOption={activeOption} />}
             </>
-
-
         );
     }
 }

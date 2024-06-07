@@ -113,7 +113,7 @@ class CartWidget extends Component {
 
 
         return (
-            <div className={`container cart-products d-${isToggled ? 'block' : 'none'}`}>
+            <div data-testid="cart-overlay" className={`container cart-products d-${isToggled ? 'block' : 'none'}`}>
 
                 {isToggled ? (
                     <>

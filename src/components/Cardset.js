@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
+// eslint-disable-next-line
 import { connect } from 'react-redux';
 import { TbShoppingCartPlus } from "react-icons/tb";
 import { Navigate } from 'react-router-dom';
 import { kebabCase } from '../data/data.js';
 
-
 class CardSet extends Component {
+
     constructor(props) {
+        console.log(props.activeOption);
+
         super(props);
         this.state = {
-            cardData: props.cardData,
+            cardData: props.activeOption === 'All' ? this.props.cardData : props.cardData.filter(product => product.category.toLowerCase() === props.activeOption.toLowerCase()) ,
             redirectToDetails: false,
-            productId: 'huarache - x - stussy - le',
         };
         this.lazyObserver = null;
     }
@@ -128,8 +130,10 @@ class CardSet extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    activeOption: state.navbar.activeOption,
-});
+// const mapStateToProps = (state) => ({
+//     // activeOption: state.navbar.activeOption,
+// });
 
-export default connect(mapStateToProps)(CardSet);
+// export default connect(mapStateToProps)(CardSet);
+
+export default CardSet;

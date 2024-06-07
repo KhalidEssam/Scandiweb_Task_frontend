@@ -35,6 +35,7 @@ function App() {
     dispatch(toggle());
   };
 
+
   return (
     <div className='App'>
       <FetchQuery query={Query} onLoadingChange={setLoading} />
@@ -46,22 +47,22 @@ function App() {
             <span className="load"></span>
           </div>
         </div>
-         // You can replace this with a proper loading spinner or component
       ) : (
         <>
           <Navbar onToggle={toggleBackgroundColor} options={categories} />
           <CartWidget isToggled={isToggled} />
 
+          
+
           <div className='app-container' onClick={() => { isToggled && toggleBackgroundColor() }} >
+              <div className={`justify-content-center Cart ${isToggled ? 'toggled' : ''} `}>
+              </div>
             <div className='h3 d-flex justify-content-start mt-4' >
               {activeOption}
             </div>
-
-            <div className={`justify-content-center Cart ${isToggled ? 'toggled' : ''} `}></div>
-
             <Routes>
-              <Route path='/' element={<ProductListing />} />
-              <Route path='/products/:id' element={<ProductListing />} />
+              <Route path='/' element={<ProductListing activeOption={activeOption} />} />
+              <Route path='/:id' element={<ProductListing activeOption={activeOption} />} />
               <Route path='/product/:id' element={<ProductDetails />} />
               <Route path='*' element={<NotFound />} />
             </Routes>

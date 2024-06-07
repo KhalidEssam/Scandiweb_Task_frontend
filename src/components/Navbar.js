@@ -23,7 +23,7 @@ class Navbar extends Component {
         const { onToggle, options, activeOption, cartItems } = this.props;
 
         return (
-            <nav className="navbar navbar-expand-lg navbar-light bg-white" style={{ padding: '0px', fontSize: '20px' }}>
+            <nav className="navbar nav-parent navbar-expand-lg navbar-light bg-white" style={{ padding: '0px', fontSize: '20px' }}>
                 <div className="container-fluid px-5">
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
@@ -36,7 +36,7 @@ class Navbar extends Component {
 
                                     <Link
                                         className={`nav-link ${activeOption === option ? 'active' : ''}`}
-                                        to={`/products/${option.toLowerCase()}`}
+                                        to={`/${option.toLowerCase()}`}
                                         onClick={() => this.handleOptionClick(option)}
                                         data-testid={`${activeOption === option ? 'active-category-link' : 'category-link'}`}
                                     >

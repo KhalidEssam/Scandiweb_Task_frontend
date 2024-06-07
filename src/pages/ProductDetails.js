@@ -20,8 +20,10 @@ class ProductDetails extends Component {
         const { id } = props.params;
         const product = this.props.products.find(product => product.id === id);
 
+
         this.state = {
             product: product || null,
+            Active: this.props.Active || 'All',
         };
     }
 
@@ -30,7 +32,6 @@ class ProductDetails extends Component {
 
         if (product && this.allAttributesSelected()) {
             this.props.addItemToCart(product);
-
 
         } else {
             alert("Please select an option for all attributes.");
@@ -65,6 +66,7 @@ class ProductDetails extends Component {
 
     render() {
         const { product } = this.state;
+        // console.log(product);
         if (!product) {
             return <div>Product not found</div>;
         }
@@ -104,7 +106,6 @@ class ProductDetails extends Component {
                         <h1>{product.name}</h1>
                         {product.attributes && product.attributes.map((attribute, index) => (
                             <div key={index} className="d-flex flex-column align-items-start mb-3">
-                                {/* {console.log(attribute)} */}
                                 <h5>{attribute.id}:</h5>
                                 <div data-testid={`product-attribute-${kebabCase(attribute.id)}`} className="d-flex flex-wrap align-items-start">
                                     {attribute.items.map((item, index) => (
@@ -123,7 +124,7 @@ class ProductDetails extends Component {
                         <h5 className="mb-3">Price: </h5>
                         {product.prices && `${product.prices.currency.label} ${product.prices.amount}`}
                         {this.allAttributesSelected() ? (
-                            <Link to="/" className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
+                            <Link to={`/${this.state.Active.toLowerCase()}`} className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
                                 <div data-testid='add-to-cart' className="btn btn-success btn-lg">
                                     Add to cart
                                 </div>
@@ -149,6 +150,7 @@ class ProductDetails extends Component {
 
 const mapStateToProps = (state) => ({
     products: state.products.products,
+    Active: state.navbar.activeOption
 });
 
 const mapDispatchToProps = {

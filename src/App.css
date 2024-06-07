@@ -171,6 +171,9 @@ img {
   pointer-events: none;
   z-index: 1;
 }
+.nav-parent {
+  height: 7%;
+}
 
 .navbar .nav-item .nav-link {
   font-family: 'Raleway';
