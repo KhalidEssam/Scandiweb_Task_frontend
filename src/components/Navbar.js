@@ -50,7 +50,7 @@ class Navbar extends Component {
                             <li className="nav-item position-relative" onClick={onToggle}>
                                 <GrCart size={28} data-testid='cart-btn' />
                                 {cartItems > 0 && (
-                                    <span className="badge bg-dark position-absolute top-0 start-100 translate-middle rounded-pill">
+                                    <span data-testid="cart-count-bubble" className="badge bg-dark position-absolute top-0 start-100 translate-middle rounded-pill">
                                         {cartItems}
                                     </span>
                                 )}

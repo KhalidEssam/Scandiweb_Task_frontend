@@ -119,20 +119,20 @@ class CartWidget extends Component {
                     <>
                         <div className='d-flex justify-content-start'>
                             <h5>My Bag</h5>
-                            <h6 className='ms-3 mt-2'>{totalItems} {totalItems > 1 ? 'items' : 'item'}</h6>
+                            <h6 className='ms-3 mt-2'>{totalItems > 1 ? ` ${totalItems} items` : totalItems === 0 ? ` 0 items` : '1 item'}</h6>
                         </div>
                         {cartItems.map(product => (
                             <div key={generateKey(product.id, product.attributes)} className="d-flex flex-wrap justify-content-between align-items-center">
                                 <div className="d-flex flex-wrap flex-column align-items-start">
-                                    <strong><h6>{product.name} (x{(product.count) || 1})</h6></strong>
-                                    <p data-testid='cart-item-amount'>Price: {product.prices.amount + " " + product.prices.currency['symbol']}</p>
+                                    <strong><h6>{product.name}x</h6> <h6 data-testid='cart-item-amount'> {(product.count) || 1} </h6> </strong>
+                                    <p >Price: {product.prices.currency['symbol'] + " " + product.prices.amount}</p>
                                     {product.attributes && product.attributes.map((attribute, index) => (
                                         <div key={index} data-testid={`cart-item-attribute-${kebabCase(attribute.id)}`} className="d-flex flex-column align-items-start mb-3">
                                             <div className="h6">{attribute.id}:</div>
                                             <div className="d-flex flex-wrap">
                                                 {attribute.items.map((item, index) => (
                                                     <li
-                                                        data-testid={`cart-item-attribute-${kebabCase(attribute.id)}-${item.value.toLowerCase()}${item.isSelected ? '-selected' : ''}`}
+                                                        data-testid={`cart-item-attribute-${kebabCase(attribute.id)}-${item.id}${item.isSelected ? '-selected' : ''}`}
                                                         key={index}
                                                         className={`item-border p-2 m-1 option-select ${item.isSelected ? 'selected' : ''}`}
                                                         style={attribute.id === "Color" ? { backgroundColor: item.value } : {}}
@@ -168,7 +168,7 @@ class CartWidget extends Component {
                     </div>
                 </h6>
 
-                <button className={`btn ${cartItems.length > 0 ? 'btn-success' : 'btn-secondary'} mt-3 mb-3`}
+                <button data-testid='place-order-btn' className={`btn ${cartItems.length > 0 ? 'btn-success' : 'btn-secondary'} mt-3 mb-3`}
                     onClick={this.handlePlaceOrder} disabled={cartItems.length === 0}>
                     PLACE ORDER
                 </button>

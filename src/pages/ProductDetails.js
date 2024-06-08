@@ -66,7 +66,6 @@ class ProductDetails extends Component {
 
     render() {
         const { product } = this.state;
-        // console.log(product);
         if (!product) {
             return <div>Product not found</div>;
         }
@@ -114,25 +113,30 @@ class ProductDetails extends Component {
                                             className={`item-border p-2 m-1 option-select ${item.isSelected ? 'selected' : ''}`}
                                             onClick={() => this.handleSelectOption(item.id, attribute.id)}
                                             style={attribute.id === "Color" ? { backgroundColor: item.value } : {}}
+                                            data-testid={`product-attribute-${kebabCase(attribute.id)}-${item.id}`}
                                         >
-                                            <h6>{attribute.id === "Color" ? "" : item.value}</h6>
+                                            <h6
+                                                data-testid={attribute.id === "Color" ? `product-attribute-${kebabCase(attribute.id)}-${item.value}` : undefined}
+                                            >
+                                                {attribute.id === "Color" ? "" : item.value}
+                                            </h6>
                                         </li>
                                     ))}
                                 </div>
                             </div>
                         ))}
                         <h5 className="mb-3">Price: </h5>
-                        {product.prices && `${product.prices.currency.label} ${product.prices.amount}`}
+                        {product.prices && `${product.prices.currency.symbol} ${product.prices.amount}`}
                         {this.allAttributesSelected() ? (
                             <Link to={`/${this.state.Active.toLowerCase()}`} className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
-                                <div data-testid='add-to-cart' className="btn btn-success btn-lg">
-                                    Add to cart
-                                </div>
+                                <button data-testid='add-to-cart' className="btn btn-success btn-lg">
+                                    ADD TO CART
+                                </button>
                             </Link>
                         ) : (
                             <div className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
-                                <div data-testid='add-to-cart' className="btn btn-success btn-lg">
-                                    Add to cart
+                                <div data-testid='add-to-cart' disabled className="btn btn-secondary btn-lg">
+                                    ADD TO CART
                                 </div>
                             </div>
                         )}

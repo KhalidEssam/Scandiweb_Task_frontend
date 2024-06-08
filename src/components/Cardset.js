@@ -8,7 +8,6 @@ import { kebabCase } from '../data/data.js';
 class CardSet extends Component {
 
     constructor(props) {
-        console.log(props.activeOption);
 
         super(props);
         this.state = {
@@ -103,7 +102,10 @@ class CardSet extends Component {
         return (
             <div className="card-set d-flex flex-wrap justify-content-center align-items-center mt-2">
                 {cardData.map((card) => (
-                    <div key={card.id} data-testid={`product-${kebabCase(card.name)}`} className="card col-12 col-sm-6 col-md-4 col-lg-4 m-3" onClick={() => this.handleCardClick(card.id)}>
+                    <div key={card.id} data-testid={`product-${kebabCase(card.name)}`} className="card col-12 col-sm-6 col-md-4 col-lg-4 m-3" 
+                    onClick={() => this.handleDetailsPageRedirect(card)} 
+                    // onClick={() => this.handleCardClick(card.id)}
+                    >
                         <div className="product-card">
                             <div className={`${card.inStock ? '' : 'out-of-stock'}`}>
                                 <div className={`shadow-select ${card.isSelected ? 'selected' : ''}`}>
@@ -116,7 +118,7 @@ class CardSet extends Component {
                                         <div className='d-flex w-100'>
                                             <p className="card-text d-flex">
                                                 <small className="text-muted">{card.prices.currency.label + " " + card.prices.amount.toFixed(2)}</small>
-                                                {card.isSelected && card.inStock && <TbShoppingCartPlus className='card-icon' onClick={() => this.handleDetailsPageRedirect(card)} />}
+                                                {card.isSelected && <TbShoppingCartPlus className='card-icon'  />}
                                             </p>
                                         </div>
                                     </div>
