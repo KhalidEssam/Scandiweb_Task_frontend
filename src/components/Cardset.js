@@ -9,7 +9,7 @@ class CardSet extends Component {
 
         super(props);
         this.state = {
-            cardData: props.activeOption === 'All' ? this.props.cardData : props.cardData.filter(product => product.category.toLowerCase() === props.activeOption.toLowerCase()),
+            cardData: props.activeOption === 'all' ? this.props.cardData : props.cardData.filter(product => product.category.toLowerCase() === props.activeOption.toLowerCase()),
             redirectToDetails: false,
         };
         this.lazyObserver = null;
@@ -18,7 +18,7 @@ class CardSet extends Component {
     componentDidUpdate(prevProps) {
         if (prevProps.activeOption !== this.props.activeOption) {
             this.setState({
-                cardData: this.props.activeOption === 'All' ? this.props.cardData : this.props.cardData.filter(product => product.category.toLowerCase() === this.props.activeOption.toLowerCase())
+                cardData: this.props.activeOption === 'all' ? this.props.cardData : this.props.cardData.filter(product => product.category.toLowerCase() === this.props.activeOption.toLowerCase())
             }, () => {
                 this.setupLazyLoading();
             });

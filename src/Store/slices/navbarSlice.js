@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const navbarSlice = createSlice({
     name: 'navbar',
     initialState: {
-        activeOption: 'All',
+        activeOption: 'all',
     },
     reducers: {
         setActiveOption: (state, action) => {
