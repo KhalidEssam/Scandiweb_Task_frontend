@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-// eslint-disable-next-line
-import { connect } from 'react-redux';
 import { TbShoppingCartPlus } from "react-icons/tb";
 import { Navigate } from 'react-router-dom';
 import { kebabCase } from '../data/data.js';
@@ -11,7 +9,7 @@ class CardSet extends Component {
 
         super(props);
         this.state = {
-            cardData: props.activeOption === 'All' ? this.props.cardData : props.cardData.filter(product => product.category.toLowerCase() === props.activeOption.toLowerCase()) ,
+            cardData: props.activeOption === 'All' ? this.props.cardData : props.cardData.filter(product => product.category.toLowerCase() === props.activeOption.toLowerCase()),
             redirectToDetails: false,
         };
         this.lazyObserver = null;
@@ -102,8 +100,8 @@ class CardSet extends Component {
         return (
             <div className="card-set d-flex flex-wrap justify-content-center align-items-center mt-2">
                 {cardData.map((card) => (
-                    <div key={card.id} data-testid={`product-${kebabCase(card.name)}`} className="card col-12 col-sm-6 col-md-4 col-lg-4 m-3" 
-                    onClick={() => this.handleDetailsPageRedirect(card)} 
+                    <div key={card.id} data-testid={`product-${kebabCase(card.name)}`} className="card col-12 col-sm-6 col-md-4 col-lg-4 m-3"
+                        onClick={() => this.handleDetailsPageRedirect(card)}
                     // onClick={() => this.handleCardClick(card.id)}
                     >
                         <div className="product-card">
@@ -117,8 +115,8 @@ class CardSet extends Component {
                                         <h5 className="card-title d-flex">{card.name}</h5>
                                         <div className='d-flex w-100'>
                                             <p className="card-text d-flex">
-                                                <small className="text-muted">{card.prices.currency.label + " " + card.prices.amount.toFixed(2)}</small>
-                                                {card.isSelected && <TbShoppingCartPlus className='card-icon'  />}
+                                                <small className="text-muted">{card.prices.currency.symbol + " " + card.prices.amount.toFixed(2)}</small>
+                                                {card.isSelected && <TbShoppingCartPlus className='card-icon' />}
                                             </p>
                                         </div>
                                     </div>
@@ -131,11 +129,5 @@ class CardSet extends Component {
         );
     }
 }
-
-// const mapStateToProps = (state) => ({
-//     // activeOption: state.navbar.activeOption,
-// });
-
-// export default connect(mapStateToProps)(CardSet);
 
 export default CardSet;

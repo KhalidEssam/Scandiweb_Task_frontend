@@ -46,7 +46,6 @@ class CartWidget extends Component {
         try {
             const response = await fetch(
                 'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
-                // 'https://ecommercescandweb.000webhostapp.com/Fullstack_assignment/gql_test/src/graphql.php',
                 {
                     method: 'POST',
                     // mode: 'no-cors',
@@ -124,7 +123,7 @@ class CartWidget extends Component {
                         {cartItems.map(product => (
                             <div key={generateKey(product.id, product.attributes)} className="d-flex flex-wrap justify-content-between align-items-center">
                                 <div className="d-flex flex-wrap flex-column align-items-start">
-                                    <strong><h6>{product.name}x</h6> <h6 data-testid='cart-item-amount'> {(product.count) || 1} </h6> </strong>
+                                    <strong className='d-flex'> <h6>{product.name + ":"}  </h6> <h6 className='ms-4' data-testid='cart-item-amount'> {(product.count) || 1}   </h6> </strong>
                                     <p >Price: {product.prices.currency['symbol'] + " " + product.prices.amount}</p>
                                     {product.attributes && product.attributes.map((attribute, index) => (
                                         <div key={index} data-testid={`cart-item-attribute-${kebabCase(attribute.id)}`} className="d-flex flex-column align-items-start mb-3">
@@ -185,7 +184,7 @@ class CartWidget extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    cartItems: state.cartItems.cartItems,  // Adjust according to your state structure
+    cartItems: state.cartItems.cartItems,
 });
 
 const mapDispatchToProps = {
