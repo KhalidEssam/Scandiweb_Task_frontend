@@ -126,7 +126,7 @@ class ProductDetails extends Component {
                             </div>
                         ))}
                         <h5 className="mb-3">Price: </h5>
-                        {product.prices && `${product.prices.currency.symbol} ${product.prices.amount}`}
+                        {product.prices && `${product.prices[0].currency.symbol} ${product.prices[0].amount}`}
                         {this.allAttributesSelected() ? (
                             <Link to={`/${this.state.Active.toLowerCase()}`} className="cart-btn d-grid gap-2 col-12 mx-auto" onClick={this.handleAddToCart}>
                                 <button data-testid='add-to-cart' className="btn btn-success btn-lg">

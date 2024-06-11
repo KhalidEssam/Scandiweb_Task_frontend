@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import { updateCartItemQuantity, removeItemFromCart, clearCart } from '../Store/slices/cartItemsSlice.js'; // Ensure this action is correctly implemented
-
 import { generateOrderMutation, kebabCase } from '../data/data.js';
+
+import { localhost , production } from '../data/data.js';
 
 class CartWidget extends Component {
     constructor(props) {
@@ -45,18 +46,16 @@ class CartWidget extends Component {
 
         try {
             const response = await fetch(
-                // 'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
-                'https://ecommercescandweb.000webhostapp.com/Fullstack_assignment/gql_test/src/graphql.php',
-
+                localhost,
                 {
                     method: 'POST',
-                    // mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         query: orderMutation
                     }),
+                    mode: 'cors', // Ensure CORS mode is enabled
                 });
 
             const data = await response.json();
@@ -79,7 +78,7 @@ class CartWidget extends Component {
             return 0.00;
         }
         return cartItems.reduce((total, product) => {
-            const productTotal = product.prices.amount * (product.count || 1);
+            const productTotal = product.prices[0].amount * (product.count || 1);
             return total + productTotal;
         }, 0).toFixed(2); // Ensure the total price is displayed correctly
     };
@@ -126,7 +125,7 @@ class CartWidget extends Component {
                             <div key={generateKey(product.id, product.attributes)} className="d-flex flex-wrap justify-content-between align-items-center">
                                 <div className="d-flex flex-wrap flex-column align-items-start">
                                     <strong className='d-flex'> <h6>{product.name + ":"}  </h6> <h6 className='ms-4' data-testid='cart-item-amount'> {(product.count) || 1}   </h6> </strong>
-                                    <p >Price: {product.prices.currency['symbol'] + " " + product.prices.amount}</p>
+                                    <p >Price: {product.prices[0].currency['symbol'] + " " + product.prices[0].amount}</p>
                                     {product.attributes && product.attributes.map((attribute, index) => (
                                         <div key={index} data-testid={`cart-item-attribute-${kebabCase(attribute.id)}`} className="d-flex flex-column align-items-start mb-3">
                                             <div className="h6">{attribute.id}:</div>
@@ -165,7 +164,7 @@ class CartWidget extends Component {
                         Total:
                     </div>
                     <div data-testid='cart-total' className='d-flex justify-content-end align-items-center'>
-                        {totalPrice + " " + (cartItems[0] ? cartItems[0].prices.currency['symbol'] : "")}
+                        {totalPrice + " " + (cartItems[0] ? cartItems[0].prices[0].currency['symbol'] : "")}
                     </div>
                 </h6>
 

@@ -115,7 +115,7 @@ class CardSet extends Component {
                                         <h5 className="card-title d-flex">{card.name}</h5>
                                         <div className='d-flex w-100'>
                                             <p className="card-text d-flex">
-                                                <small className="text-muted">{card.prices.currency.symbol + " " + card.prices.amount.toFixed(2)}</small>
+                                                <small className="text-muted">{card.prices[0].currency.symbol + " " + card.prices[0].amount.toFixed(2)}</small>
                                                 {card.isSelected && <TbShoppingCartPlus className='card-icon' />}
                                             </p>
                                         </div>

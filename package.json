@@ -1,7 +1,6 @@
 {
   "name": "scandiweb_frontend",
   "version": "0.1.0",
-  "proxy": "http://localhost/fullstack_assignment/gql_test/src/graphql.php",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.5",
