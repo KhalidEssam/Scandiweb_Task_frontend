@@ -45,7 +45,9 @@ class CartWidget extends Component {
 
         try {
             const response = await fetch(
-                'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
+                // 'http://localhost/fullstack_assignment/gql_test/src/graphql.php',
+                'https://ecommercescandweb.000webhostapp.com/Fullstack_assignment/gql_test/src/graphql.php',
+
                 {
                     method: 'POST',
                     // mode: 'no-cors',
